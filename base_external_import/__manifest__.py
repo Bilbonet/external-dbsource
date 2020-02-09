@@ -5,7 +5,7 @@
 
 {
     'name': 'Import data from external data sources.',
-    'version': '11.0.1.0.0',
+    'version': '12.0.1.0.0',
     'category': 'Tools',
     'author': "Jesus Ramiro, Liu Jianyun, Daniel Reis, "
               "Odoo Community Association (OCA)",

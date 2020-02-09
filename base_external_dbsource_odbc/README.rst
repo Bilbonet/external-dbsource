@@ -15,7 +15,6 @@ Installation
 ============
 
 * Install ``unixodbc`` and ``python-pyodbc`` packages
-* Install ``base_external_dbsource_sqlite`` Odoo module
 
 Configuration
 =============

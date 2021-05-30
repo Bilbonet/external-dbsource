@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <odoo>
     <record model="base.external.dbsource" id="demo_odbc">
-        <field name="name">ODBC Demo</field>
-        <field name="conn_string">Driver='ODBC Driver 11 for SQL Server';Server=myServerAddress;Database=myDataBase;Uid=myUsername;</field>
+        <field name="name">ODBC Demo MSSQL</field>
+        <field name="conn_string">Driver={ODBC Driver 17 for SQL Server};Server=myServerAddress;Database=myDataBase;Uid=myUsername;Charset=utf8;</field>
         <field name="password">password</field>
         <field name="connector">pyodbc</field>
     </record>

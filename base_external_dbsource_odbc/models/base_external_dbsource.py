@@ -1,5 +1,6 @@
 # Copyright 2011 Daniel Reis
 # Copyright 2016 LasLabs Inc.
+# Copyright 2020 Jesus Ramiro <jesus@bilbonet.net>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 import logging
@@ -28,18 +29,14 @@ class BaseExternalDbsource(models.Model):
 
     _inherit = "base.external.dbsource"
 
-    @api.multi
     def connection_close_pyodbc(self, connection):
         return connection.close()
 
-    @api.multi
     def connection_open_pyodbc(self):
         return pyodbc.connect(self.conn_string_full)
 
-    @api.multi
     def execute_pyodbc(self, sqlquery, sqlparams, metadata):
         return self._execute_generic(sqlquery, sqlparams, metadata)
 
-    @api.multi
     def update_pyodbc(self, sqlquery, sqlparams):
         return self._commit_generic(sqlquery, sqlparams)

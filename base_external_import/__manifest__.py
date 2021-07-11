@@ -1,11 +1,11 @@
+# Copyright 2021 Jesus Ramiro <jesus@bilbonet.net>
 # Copyright <2011> <Daniel Reis>
 # Copyright <2016> <Liu Jianyun>
-# Copyright <2017> <Jesus Ramiro>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 {
     'name': 'Import data from external data sources.',
-    'version': '12.0.1.0.0',
+    'version': '13.0.1.0.0',
     'category': 'Tools',
     'author': "Jesus Ramiro, Liu Jianyun, Daniel Reis, "
               "Odoo Community Association (OCA)",

@@ -1,6 +1,6 @@
 # Copyright 2011 Daniel Reis
 # Copyright 2016 LasLabs Inc.
-# Copyright 2020 Jesus Ramiro <jesus@bilbonet.net>
+# Copyright 2021 Jesus Ramiro <jesus@bilbonet.net>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 import logging

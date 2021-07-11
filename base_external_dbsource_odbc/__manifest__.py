@@ -1,5 +1,6 @@
 # Copyright <2011> <Daniel Reis, Maxime Chambreuil, Savoir-faire Linux>
 # Copyright 2016 LasLabs Inc.
+# Copyright 2021 Jesus Ramiro <jesus@bilbonet.net>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     'name': 'External Database Source - ODBC',

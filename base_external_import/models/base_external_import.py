@@ -1,4 +1,4 @@
-# Copyright <2019> <Jesus Ramiro>
+# Copyright 2021 Jesus Ramiro <jesus@bilbonet.net>
 # Copyright <2016> <Liu Jianyun>
 # Copyright <2011> <Daniel Reis>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -9,7 +9,6 @@ from odoo import models, fields
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 
-
 _logger = logging.getLogger(__name__)
 _loglvl = _logger.getEffectiveLevel()
 
@@ -19,16 +18,12 @@ class Log(models.Model):
     _description = 'Log'
     _rec_name = 'import_id'
 
-    import_id = fields.Many2one('base.external.import.task',
-                                string='Import Task', readonly=True)
+    import_id = fields.Many2one('base.external.import.task', string='Import Task', readonly=True)
     start_run = fields.Datetime(string='Time started', readonly=True)
     last_run = fields.Datetime(string='Time ended', readonly=True)
-    last_record_count = fields.Integer(string='Last record count',
-                                       readonly=True)
-    last_error_count = fields.Integer(string='Last error count',
-                                      readonly=True)
-    last_warn_count = fields.Integer(string='Last warning count',
-                                     readonly=True)
+    last_record_count = fields.Integer(string='Last record count', readonly=True)
+    last_error_count = fields.Integer(string='Last error count', readonly=True)
+    last_warn_count = fields.Integer(string='Last warning count', readonly=True)
     last_log = fields.Text(string='Last run log', readonly=True)
 
 
@@ -39,34 +34,22 @@ class Task(models.Model):
 
     name = fields.Char(required=True, string='Name', size=64)
     enabled = fields.Boolean(string='Execution enabled', default=True)
-    dbsource_id = fields.Many2one('base.external.dbsource',
-                                  string='Database source', required=True)
-    sql_source = fields.Text(
-        string='SQL',
-        required=True,
-        help='Column names must be valid "import_data" columns.'
-    )
-    model_target = fields.Many2one('ir.model', string='Target object',
-                                   required=True)
-    exec_order = fields.Integer(
-        string='Execution order',
-        help="Defines the order to perform the import",
-        default=10
-    )
-    last_sync = fields.Datetime(
-        string='Last sync time',
+    dbsource_id = fields.Many2one('base.external.dbsource', string='Database source', required=True)
+    sql_source = fields.Text(string='SQL', required=True,
+        help='Column names must be valid "import_data" columns.')
+    model_target = fields.Many2one('ir.model', string='Target object', required=True)
+    exec_order = fields.Integer(string='Execution order', default=10,
+        help="Defines the order to perform the import")
+    last_sync = fields.Datetime(string='Last sync time',
         help="Datetime for the last successful sync. \nLater changes \
              on the source may not be replicated on the destination"
     )
-    start_run = fields.Datetime(string='Time started', readonly=True)
-    last_run = fields.Datetime(string='Time ended', readonly=True)
-    last_record_count = fields.Integer(string='Last record count',
-                                       readonly=True)
-    last_error_count = fields.Integer(string='Last error count',
-                                      readonly=True)
-    last_warn_count = fields.Integer(string='Last warning count',
-                                     readonly=True)
-    last_log = fields.Text(string='Last run log', readonly=True)
+    start_run = fields.Datetime(string='Time started', readonly=True, copy=False)
+    last_run = fields.Datetime(string='Time ended', readonly=True, copy=False)
+    last_record_count = fields.Integer(string='Last record count', readonly=True, copy=False)
+    last_error_count = fields.Integer(string='Last error count', readonly=True, copy=False)
+    last_warn_count = fields.Integer(string='Last warning count', readonly=True, copy=False)
+    last_log = fields.Text(string='Last run log', readonly=True, copy=False)
     log_enabled = fields.Boolean(string='Log enabled', default=True)
 
     def _import_data(self, flds, data, model_obj, table_obj, log):

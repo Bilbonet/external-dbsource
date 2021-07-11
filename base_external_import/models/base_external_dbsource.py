@@ -1,18 +1,15 @@
-# Copyright 2018 Jesus Ramiro <jesus@bilbonet.net>
+# Copyright 2021 Jesus Ramiro <jesus@bilbonet.net>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+from odoo import models
 
-
-from odoo import api, models, _
 
 class BaseExternalDbsource(models.Model):
     """ It provides logic for update an external data source
         with an SQL sentence.
         You can pass parameters in a dictionary
     """
-
     _inherit = 'base.external.dbsource'
 
-    @api.multi
     def commit(self, query=None, execute_params=None):
         """ Executes update query and returns a number of rows updated.
 
@@ -27,7 +24,6 @@ class BaseExternalDbsource(models.Model):
                     'dt': datetime.datetime(2000, 12, 31),
                 }
         """
-
         method = self._get_adapter_method('update')
         number = method(query, execute_params)
 

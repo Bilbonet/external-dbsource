@@ -4,23 +4,17 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     'name': 'External Database Source - ODBC',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'category': 'Tools',
     'author': "Daniel Reis, "
               "LasLabs, "
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/Bilbonet/external-dbsource',
     'license': 'LGPL-3',
-    'depends': [
-        'base_external_dbsource',
-    ],
+    'depends': ['base_external_dbsource'],
      'external_dependencies': {
-        'python': [
-            'pyodbc',
-        ],
+        'python': ['pyodbc'],
      },
-    'demo': [
-        'demo/base_external_dbsource.xml',
-    ],
+    'demo': ['demo/base_external_dbsource.xml'],
     'installable': True,
 }

@@ -37,7 +37,7 @@ class Task(models.Model):
     dbsource_id = fields.Many2one('base.external.dbsource', string='Database source', required=True)
     sql_source = fields.Text(string='SQL', required=True,
         help='Column names must be valid "import_data" columns.')
-    model_target = fields.Many2one('ir.model', string='Target object', required=True)
+    model_target = fields.Many2one('ir.model', string='Target object', required=True, ondelete='cascade')
     exec_order = fields.Integer(string='Execution order', default=10,
         help="Defines the order to perform the import")
     last_sync = fields.Datetime(string='Last sync time',

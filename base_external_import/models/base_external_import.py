@@ -69,8 +69,15 @@ class Task(models.Model):
     last_log = fields.Text(string='Last run log', readonly=True)
     log_enabled = fields.Boolean(string='Log enabled', default=True)
 
-    def _import_data(self, flds, data, model_obj, table_obj, log):
-        # Import data and returns error msg or empty string
+    def _import_data(self, flds, data, model_obj, log):
+        """ Import data and create records.
+        :param flds: List of fields to import
+        :param data: The data to import in each field
+        :param model_obj: Object model where record will be created
+        :param table_obj: Object task import definition
+        :param log: In this param writes data of each record importation
+        :returns False or The id of record created
+        """
 
         def append_to_log(log, level, obj_id='', msg='', rel_id=''):
             if '_id_' in obj_id:
@@ -109,7 +116,7 @@ class Task(models.Model):
             log['last_warn_count'] += 1
             return False
 
-        return True
+        return int(importmsg['ids'][0])
 
     def import_run(self, ids=None):
         # ids value depends where the function is called.
@@ -161,7 +168,7 @@ class Task(models.Model):
             params = [(sync)]
             res = db_model.execute(obj.sql_source, params, metadata=True)
 
-            # Exclude columns titled "Id"; add (xml_)"id" column
+            # Exclude columns titled "Id" and Add (xml_)"id" column
             cidx = ([i for i, x in enumerate(res['cols'])
                      if x.upper() != 'ID'])
             cols = ([x for i, x in enumerate(res['cols'])
@@ -181,7 +188,9 @@ class Task(models.Model):
                 xml_prefix = '__import__.' + model_name.replace('.', '_') + '_'
                 return xml_prefix + row_id
 
-            # Import each row:
+            external_ids = list()
+            odoo_ids = list()
+            # Import each row
             for row in res['rows']:
                 # Build data row;
                 # import only columns present in the "cols" list
@@ -195,17 +204,24 @@ class Task(models.Model):
                     data.append(v)
                 data.append(build_xmlid(row[0]).strip())
 
-                # Import the row; on error, write line to the log
+                # Import the row;
                 log['last_record_count'] += 1
-                self._import_data(cols, data, model_obj, obj, log)
+                imported_id = self._import_data(cols, data, model_obj, log)
                 if log['last_record_count'] % 500 == 0:
                     _logger.info('...%s rows processed...'
                                  % (log['last_record_count']))
+                if imported_id:
+                    external_ids.append(row[0])
+                    odoo_ids.append(imported_id)
+
 
             # Finished importing all rows
-            # If no errors, write new sync date
-            if not (log['last_error_count'] or log['last_warn_count']):
+            # If no errors and the task has last_sync, we update last_sync date
+            if not (log['last_error_count'] or log['last_warn_count'])\
+                    and obj.last_sync:
                 log['last_sync'] = log['start_run']
+
+            # Write logs
             level = logging.DEBUG
             if log['last_warn_count']:
                 level = logging.WARN
@@ -216,17 +232,20 @@ class Task(models.Model):
                         (model_name, log['last_record_count'],
                          log['last_error_count'],
                          log['last_warn_count']))
-            # Write run log, either if the table import is active or inactive
+
+            # Write run log in the task, either if the log option is active or not
             if log['last_log']:
                 log['last_log'].insert(
                     0,
                     'LEVEL | == Line == | == Relationship == | == Message =='
                     )
-            log.update({'last_log': '\n'.join(log['last_log'])})
-            log.update({'last_run': datetime.now().replace(microsecond=0)})
+            log.update({
+                'last_log': '\n'.join(log['last_log']),
+                'last_run': datetime.now().replace(microsecond=0)
+            })
             obj.write(log)
 
-            # Save log in the table
+            # Save log if the option is enabled
             if obj.log_enabled:
                 import_logs = {
                     'import_id': obj.id,
@@ -241,7 +260,7 @@ class Task(models.Model):
 
         # Finished
         _logger.debug('Import job FINISHED.')
-        return True
+        return [external_ids, odoo_ids]
 
     def import_schedule(self):
         cron_obj = self.env['ir.cron']

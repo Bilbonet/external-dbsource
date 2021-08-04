@@ -1,4 +1,4 @@
-# Copyright 2021 Jesus Ramiro <jesus@bilbonet.net>
+# Copyright <2021> Jesus Ramiro <jesus@bilbonet.net>
 # Copyright <2016> <Liu Jianyun>
 # Copyright <2011> <Daniel Reis>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
@@ -54,12 +54,14 @@ class Task(models.Model):
 
     def _import_data(self, flds, data, model_obj, log):
         """ Import data and create records.
-        :param flds: List of fields to import
-        :param data: The data to import in each field
-        :param model_obj: Object model where record will be created
-        :param table_obj: Object task import definition
-        :param log: In this param writes data of each record importation
-        :returns False or The id of record created
+        :param
+            flds: List of fields to import
+            data: The data to import in each field
+            model_obj: Object model where record will be created
+            table_obj: Object task import definition
+            log: In this param writes data of each record importation
+        :returns
+            False or id of the record created
         """
 
         def append_to_log(log, level, obj_id='', msg='', rel_id=''):
@@ -102,14 +104,18 @@ class Task(models.Model):
         return int(importmsg['ids'][0])
 
     def import_run(self, ids=None):
-        # ids value depends where the function is called.
+        """
+        :param
+            ids: id or List of ids of import tasks that you want to run
+        """
+
         run_ids = None
-        if isinstance(ids, dict):
-            run_ids = self.ids
-        elif isinstance(ids, int):
+        if isinstance(ids, int):
             run_ids = [ids]
-        else:
+        elif isinstance(ids, list):
             run_ids = ids
+        else:
+            run_ids = self.ids
 
         if run_ids:
             actions = self.search(
@@ -133,8 +139,7 @@ class Task(models.Model):
             model_name = obj.model_target.model
             model_obj = self.env.get(model_name)
 
-            # now() microseconds are stripped
-            # to avoid problem with SQL smalldate
+            # now() microseconds are stripped to avoid problem with SQL smalldate
             log = {'start_run': datetime.now().replace(microsecond=0),
                    'last_run': None,
                    'last_record_count': 0,

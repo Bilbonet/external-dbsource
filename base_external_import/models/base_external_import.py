@@ -257,7 +257,7 @@ class Task(models.Model):
             'model_id': self.env.ref(
                 'base_external_import.model_base_external_import_task').id,
             'state': 'code',
-            'code': 'model.import_run([(%s,)])' % self.id,
+            'code': 'model.import_run(%s)' % self.id,
             'user_id': self.env.ref('base.user_root').id,
             'interval_number': 24,
             'interval_type': 'hours',

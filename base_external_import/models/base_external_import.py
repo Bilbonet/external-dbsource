@@ -103,10 +103,14 @@ class Task(models.Model):
 
         return int(importmsg['ids'][0])
 
-    def import_run(self, ids=None):
+    def import_run(self, ids=None, param_values=None):
         """
         :param
             ids: id or List of ids of import tasks that you want to run
+            param_values: A list of Values for the SQL params in the query
+        :returns False or a list with two lists inside [external_ids, odoo_ids]
+            external_ids: List of ExternalIDS of records created
+            odoo:ids: List ids of records created
         """
 
         run_ids = None
@@ -148,13 +152,19 @@ class Task(models.Model):
                    'last_log': list()}
             obj.write(log)
 
-            # Prepare SQL sentence; replace "%s" with the last_sync date
+            # Prepare params and last_sync date param
+            params = list()
+            if isinstance(param_values, list):
+                params = param_values
             if obj.last_sync:
-                sync = obj.last_sync
-            else:
-                sync = datetime(1900, 1, 1, 0, 0, 0)
-            params = [(sync)]
-            res = db_model.execute(obj.sql_source, params, metadata=True)
+                params.append(obj.last_sync)
+
+            try:
+                res = db_model.execute(obj.sql_source, params, metadata=True)
+            except Exception:
+                errmsg = str(sys.exc_info()[1])
+                errmsg += '\n %s' % params
+                raise ValidationError(errmsg)
 
             # Exclude columns titled "Id" and Add (xml_)"id" column
             cidx = ([i for i, x in enumerate(res['cols'])
@@ -248,7 +258,10 @@ class Task(models.Model):
 
         # Finished
         _logger.debug('Import job FINISHED.')
-        return [external_ids, odoo_ids]
+        if external_ids and odoo_ids:
+            return [external_ids, odoo_ids]
+        else:
+            return False
 
     def import_schedule(self):
         cron_obj = self.env['ir.cron']

@@ -127,7 +127,7 @@ class Task(models.Model):
             param_values: A list of Values for the SQL params in the query
         :returns False or a list with two lists inside [external_ids, odoo_ids]
             external_ids: List of ExternalIDS of records created
-            odoo:ids: List ids of records created
+            odoo_ids: List ids of records created
         """
 
         run_ids = None
@@ -233,7 +233,7 @@ class Task(models.Model):
             # Finished importing all rows
             # If no errors and the task has last_sync, we update last_sync date
             if not (log['last_error_count'] or log['last_warn_count'])\
-                    and obj.last_sync:
+                                            and obj.last_sync:
                 log['last_sync'] = log['start_run']
 
             # Write logs

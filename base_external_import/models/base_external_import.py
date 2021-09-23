@@ -125,9 +125,10 @@ class Task(models.Model):
         :param
             ids: id or List of ids of import tasks that you want to run
             param_values: A list of Values for the SQL params in the query
-        :returns False or a list with two lists inside [external_ids, odoo_ids]
+        :returns list with:
             external_ids: List of ExternalIDS of records created
             odoo_ids: List ids of records created
+            log: Dictionary with the results of the import task
         """
 
         run_ids = None
@@ -275,10 +276,8 @@ class Task(models.Model):
 
         # Finished
         _logger.debug('Import job FINISHED.')
-        if external_ids and odoo_ids:
-            return [external_ids, odoo_ids]
-        else:
-            return False
+        return [external_ids, odoo_ids, log]
+
 
     def import_schedule(self):
         cron_obj = self.env['ir.cron']

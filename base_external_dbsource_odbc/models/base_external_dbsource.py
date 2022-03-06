@@ -5,18 +5,19 @@
 
 import logging
 
-from odoo import api, models
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
 try:
-    from odoo.addons.base_external_dbsource.models import (
-        base_external_dbsource,
-    )
+    from odoo.addons.base_external_dbsource.models import base_external_dbsource
+
     CONNECTORS = base_external_dbsource.BaseExternalDbsource.CONNECTORS
     try:
         import pyodbc
+
         CONNECTORS.append(('pyodbc', 'ODBC'))
+        assert pyodbc
     except ImportError:
         _logger.info('ODBC libraries not available. Please install '
                      '"unixodbc" and "python-pyodbc" packages.')
@@ -28,6 +29,8 @@ class BaseExternalDbsource(models.Model):
     """ It provides logic for connection to a ODBC data source. """
 
     _inherit = "base.external.dbsource"
+
+    PWD_STRING_ODBC = "Password=%s;"
 
     def connection_close_pyodbc(self, connection):
         return connection.close()

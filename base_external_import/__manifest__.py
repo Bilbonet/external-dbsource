@@ -22,9 +22,6 @@
         'views/base_external_import_view.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [
-        'demo/base_external_import_demo.xml',
-    ],
     'test': [],
     'installable': True,
     'active': False,

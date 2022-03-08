@@ -5,17 +5,17 @@
 
 import logging
 
-from odoo import api, models
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
 try:
-    from odoo.addons.base_external_dbsource.models import (
-        base_external_dbsource,
-    )
+    from odoo.addons.base_external_dbsource.models import base_external_dbsource
+
     CONNECTORS = base_external_dbsource.BaseExternalDbsource.CONNECTORS
     try:
         import pyodbc
+        
         CONNECTORS.append(('pyodbc', 'ODBC'))
     except ImportError:
         _logger.info('ODBC libraries not available. Please install '

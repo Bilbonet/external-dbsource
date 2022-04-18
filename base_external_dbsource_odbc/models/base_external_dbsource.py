@@ -47,9 +47,9 @@ class BaseExternalDbsource(models.Model):
     """ Implements SQL 'executemany' Method
         with 'fast_executemany' to improve performance
     """
-    def executemany(self, query=None, execute_params=None):
+    def executemany(self, sqlquery=None, sqlparams=None):
         method = self._get_adapter_method('executemany')
-        return method(query, execute_params)
+        return method(sqlquery, sqlparams)
 
     def executemany_pyodbc(self, sqlquery, sqlparams):
         with self.connection_open() as connection:

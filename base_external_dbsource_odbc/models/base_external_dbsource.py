@@ -43,3 +43,19 @@ class BaseExternalDbsource(models.Model):
     @api.multi
     def update_pyodbc(self, sqlquery, sqlparams):
         return self._commit_generic(sqlquery, sqlparams)
+
+    """ Implements SQL 'executemany' Method
+        with 'fast_executemany' to improve performance
+    """
+    def executemany(self, query=None, execute_params=None):
+        method = self._get_adapter_method('executemany')
+        return method(query, execute_params)
+
+    def executemany_pyodbc(self, sqlquery, sqlparams):
+        with self.connection_open() as connection:
+            cur = connection.cursor()
+            # Important for the performance
+            cur.fast_executemany = True
+            cur.executemany(sqlquery, sqlparams)
+            cur.commit()
+            return True

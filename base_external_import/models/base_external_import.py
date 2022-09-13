@@ -70,15 +70,15 @@ class Task(models.Model):
     log_enabled = fields.Boolean(string='Log enabled', default=True)
 
     def _import_data(self, flds, data, model_obj, log):
-        """ Import data and create records.
+        """ Import data and create or update records.
         :param
             flds: List of fields to import
             data: The data to import in each field
-            model_obj: Object model where record will be created
+            model_obj: Object model where record will be created or updated
             table_obj: Object task import definition
             log: In this param writes data of each record importation
         :returns
-            False or id of the record created
+            False or id of the record created or updated
         """
 
         def append_to_log(log, level, obj_id='', msg='', rel_id=''):

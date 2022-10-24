@@ -10,6 +10,7 @@
     'author': "Jesus Ramiro, Liu Jianyun, Daniel Reis, "
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/Bilbonet/server-tools',
+    "license": "AGPL-3",
     'images': [
         'images/snapshot1.png',
         'images/snapshot2.png',
